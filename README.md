@@ -78,3 +78,55 @@ Examining the workflow DFG (after filtering out some noise), we see that *W_Comp
 
 Before discovering the process one might filter the event data and filter out everything that does not appear too often, since this would be regarded noise and might defer the impression of the actual process. One example for this might be the short traces on the second branch (see [here]((#loan-process-chart))). In addition, we could shorten processes that need much longer to complete than the average, since they could be considered outliers. In this log in particular three types of events exist (W, O, A). Therefore we split the log into three parts as well. We apply these preprocessing strategies.
 
+# Process Discovery
+
+In the following, we discover models for the three stages of the process and the two logs. We start by looking at the application process.
+
+## Process of Application States
+
+We first mine the log of the first branch. Starting with the Alpha Miner we do not end up with a workflow net and thus this miner is not applicable for us. The heuristics miner together with a frequency threshold of **0.1** yields a quite large and not simple model, which is why we omit it. Further, using a threshold of **0.3** gives us a too overfitting model. The inductive miner without any parameters gives a good model in terms of replaying the log but is worse than the inductive miner with a noise threshold of **0.1-0.2**. The IMf gives us a simple log which has good fitness, is not overfitting, and represents the process the best. Further, we ran the ILP Miner but ended up with a model, having many arcs and not good precision and fitness after analyzing with ProM. Lastly, we tried the eST Miner but it could not finish computing.
+
+![M1_A](path/to/your/images/a/M1_A.png)
+*Figure 1: $M_{1}^{A}$ mined with IMf and a noise threshold of 0.2*
+
+We go the same way as before and first run the Alpha Miner on the filtered log for branch two. This gives us a workflow net this time, but it is not sound, contains too many implicit places, and is not simple. Speaking of simplicity, we again have that the ILP miner is not simple and therefore not further contemplated. The IMf with frequency thresholds of **0.1-0.2** is precise but too general, which is why we recommend the normal IM (see *Figure 2*). The Heuristic Miner would also be a good choice, because of its statistics. It has a fitness of **0.99** and a precision of one but is not as simple as the Inductive Miner, who has a fitness of **1**, by construction, but a precision of **0.956**. For reasons of simplicity we choose the Inductive Miner in its classical variant. Again, the eST Miner could not finish computing.
+
+![IM_M2](path/to/your/images/a/IM_m2.png)
+*Figure 2: $M_{2}^{A}$ mined with IM*
+
+Comparing the two models, we see that they look similar by their structure. The first model starts with creating an application and then choosing between submitting or directly moving towards A_Concept. This is not observed in the second model, which is due to the fact that submission is only possible via an online application. Confusingly, the second branch has also a submitted state, which is why we cannot rely on names when analyzing (see enhancement strategies). Now the "low" precision of $M_{2}^{A}$ comes to shine when we observe that multiple activities can be skipped by tau transitions. This is not highly observed in the first model, where we only have a few decisions, and applications are always first accepted and completed (which can be skipped in the first model). The second model has a pre-accepting state, which cannot be seen in the first model. This might be a result of the difference in the information systems. Towards the end $M_{1}^{A}$ allows for looping between validation and marking incomplete files, which cannot be seen in the second model (according to the model the second branch has to have complete files at some point in time). At the end we can choose between denying and canceling and the state A_Pending in the first model. The difference to the second model is here that branch two allows for a parallel run between A_Approved, A_Activated, and A_Registered.
+
+## Process of Offer States
+
+As requested, we do not filter the offer logs. The directly follows graphs (abbrev. DFG) can be looked at below.
+
+![DFG_L1O](path/to/your/images/c/dfg_l1o.jpg)
+*Figure 3: DFG $L^O_1$*
+
+![DFG_L2O](path/to/your/images/c/dfg_l20.jpg)
+*Figure 4: DFG $L^O_2$*
+
+The main difference is that the DFG for the first log has an end activity which cannot be seen in the second log. Further, the DFG for the first log has no loops and therefore does not allow for repetitions in an offer process. The other DFG allows for the creation of multiple offers after an offer has been canceled, which could be the result of negotiations, allowed by the second branch. Hence, acceptance and refusing could be considered the two end activities for an offer process on the second branch, but *not quite*. Looking at the colors, we observe that the first branch ends always in end but in the second branch some offer processes end in O_Sent (mail only) and O_Returned, representing incomplete processes. For completeness, we should consider the first DFG, nevertheless, the second DFG represents realistic behavior, with customers simply not responding and rejecting offers. For *analyzing* the process, we choose the second DFG (because we can analyze where the problems exactly lie to enhance the process) but for a desirable behavior and a *discovery* we would like to see the first DFG, since it avoids loops and has individual start and end activities. The reasons for the differences could be that the first branch has better tracking of the process. This is supported by the fact that the first branch offers one additional technology and therefore might also have better technology in general when it comes to control of the workflow.
+
+## Process of Workflow States
+
+Lastly, we analyze the workflow of the process. To do so, we mine the two models $M_{1}^{W}$ and $M_{2}^{W}$ with the IMflc Miner, using a noise threshold of **0.05** for the first model and a threshold of **0.2** for the second one. We omit the IMlc Miner since it yields too large and not simple models.
+
+![IMFLc_M1](path/to/your/images/d/imflc_0.05.png)
+*Figure 5: $M_{1}^{W}$ mined with IMflc and a noise threshold of 0.05*
+
+![IMFLc_M2](path/to/your/images/d/imflc_m2_2.png)
+*Figure 6: $M_{2}^{W}$ mined with IMflc and a noise threshold of 0.2*
+
+Comparing the two models we can see that both allow for many choices. Still, the second model required for a complete application whereas this step can be skipped in the first log, but both require a call after offers. A call after offers can be looped in the second model, which is realistic. The end part for both workflows is the same as both models either finish with call after offers or go for validating the application and possibly calling and looping for incomplete files. The first branch has fewer choices than the second one and follows therefore a stricter order, which has been already mentioned throughout the course of this report. The fact that the second model has more loops shows a general trend, as loops were also seen in the DFG for the second log in the offer state.
+
+### Description of $M^W_1$
+
+It is possible to skip the first three activities. The first step is to either assess for potential fraud or to skip this step. Next, the leads are being handled and this is either followed by a shortened completion or by skipping the shortened completion. After that, it is possible to complete the application or to skip this step. Then it is always mandatory to make a call after the offer. The process can then be finished or the validation of the application takes place. After validating a call for incomplete files can be made. After that, the validation process including the option to call for incomplete files can be repeated multiple times before finally reaching the end.
+
+### Comparison and Description of $M^W_2$
+
+The Petri net starts by either checking at least once for potential fraud or by skipping this step. After that, it is possible to handle the leads or skip this step. The difference to the first model is that there is no longer an option for shortened completion. Now there are three options, one of which is to end the process. Another option is to validate the application. After that, it is always called at least once for incomplete files before ending the process. The third option is to complete the application at least once and then finish the process or to call the customer after the offer at least once before finally finishing the process.
+
+Compared to the previous model, there are some differences. It is not mandatory anymore to call after an offer. It is not possible to call after an offer without completing the application first. Also, it is not possible to redo the validation but only the call for incomplete files.
+
