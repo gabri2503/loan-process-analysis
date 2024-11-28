@@ -14,11 +14,11 @@ Despite these differences, the two branches share several similarities, which ar
 
 In this section, we are going to analyze two different branches used by a bank for their loan application process and state the key differences one can obtain by looking at statistics. The process usually starts and should start with an application by the customer and end with a response from the bank. Most often, we see that applications get sent in, accepted, and then the offer is prepared, and the customer is notified about the success. The process ends with activities regarding the workflow, but also with possible cancellations and calls after the offer.
 
-## a)
+## Overview of Basic Statistics
 
 Both branches seem to have similar amounts of applications, which can be seen as the amount of traces in the first log is **14159** and **13087** in the second log. There are **7697** trace variants in the first log and **4366** in the second log. This might be explained due to the first log having **527123** events and the second one only **262200**. Therefore, looking at the amount of events, the second log has fewer possibilities to be diverse. Further, more events happening might explain why the average length of a trace in the first log is **37.229** and therefore higher than the average of **20.035** observed in the second log. Being more active, the first branch has **124** resources working while the second branch has only **68** resources, excluding "nan" (at this point it is not clear what "nan" could mean and since it is not asked for the task at hand, we do not elaborate it further). Looking at the longest work both branches had for a process, we observe a duration of approx. **115** days for the first log and **137** for the second log. Contrary, examining the shortest duration of a trace, we see that the first branch took **282** seconds for its shortest traces and only **2** seconds lasts the shortest trace in the second log. The average case duration is **21.51** days together with a median of **7.28** days for the first branch and an average of **8.62** days and a median of **0.81** days for the second branch. Both logs start on 01/01/2022 and end on 06/15/2022. Looking at the activities that happen only on one branch and not on the other, we have that *A_Validating*, *O_Sent (online only)*, *A_Pending*, *W_Shortened completion*, *A_Concept*, *A_Create Application*, *O_Sent (mail and online)*, and *A_Incomplete* occur only in branch one, and *A_Approved*, *A_Preaccepted*, *O_Sent (mail only)*, *A_Activated*, *A_Partially Submitted*, *A_Registered*, and *W_Modify contract details* occur only in the second branch. However, without knowing how the process on each branch works exactly, the names might not have the same meaning if they sound similar (and vice versa).
 
-## b)
+## Dotted Charts for Logs L1 and L2
 
 In the following figure, we can see the four dotted charts.
 
@@ -39,7 +39,7 @@ In both charts, we can see a structured layout, where we observe column-wise beh
 
 Changing the time interpretation yields the two bottom subfigures of the previous figure. The first observation is the spike in the chart for the second branch, which describes that on this branch roughly half of the traces are stopped almost immediately (might be a result of the automated assessment, which is either more strict or simply shorter on branch two). This is supported by the low median found in subtask a. This constitutes a big difference between the two branches and could be considered noise. Therefore, filtering it out and scaling the chart up, we end up with a quite similar chart as for the first branch. One additional observation is the white space towards the bottom of both charts, where the applications start and then not much happens and then the process ends after roughly 30 days. This could imply a cluster of customers, where many customers apply, and then do not interact with the process anymore and then get reminded by the system (blue vertical line in chart c) and then after no response the process gets canceled by the system automatically. This can be also seen in the chart for L2, however here we observe more W_Complete application and more offers after hours, which could imply that this is a cluster of people negotiating more and that this might be more frequent on branch two. Hence, we observe a visual similarity with two different meanings. The described cluster of customers for chart c can be seen in chart d towards the bottom.
 
-## c)
+## Filtering Strategy for Complete Cases
 
 We have three sublogs, which is why we look at all their abstract processes and try to find necessary activities. Looking at the application part of a log, we see that, by the description of the process, *A_Concept* represents the start of an application and *A_Pending*, *A_Denied* and *A_Canceled* represent the end of an application process, hence these are mandatory for any trace. The last two also allow for termination of a trace.
 
@@ -73,12 +73,7 @@ Examining the workflow DFG (after filtering out some noise), we see that *W_Comp
 - O_Cancelled
 - A_Registered
 
-## d)
 
-1. The fraction of traces with *A_Pending* in the first branch is **56%** while the fraction of successful traces in the second branch is **17.7%**. This means that the applications happening on the second branch are far less successful. Maybe they are stricter with their loan offers or just have worse customers in terms of credit scores.
-2. On the first branch, a total of **43.995%** of the traces are not successful, whereas the number for the second branch is **82.3%**. This result is complementary to the previous one.
-3. The fraction of traces with more than one offer is **100%** for both branches, which could be the result of negotiations over the sum of the credit.
-
-## Preprocessing
+# Preprocessing
 
 Before discovering the process, one might filter the event data and filter out everything that does not appear too often, since this would be regarded as noise and might defer the impression of the actual process. One example for this might
