@@ -87,12 +87,12 @@ In the following, we discover models for the three stages of the process and the
 We first mine the log of the first branch. Starting with the Alpha Miner we do not end up with a workflow net and thus this miner is not applicable for us. The heuristics miner together with a frequency threshold of **0.1** yields a quite large and not simple model, which is why we omit it. Further, using a threshold of **0.3** gives us a too overfitting model. The inductive miner without any parameters gives a good model in terms of replaying the log but is worse than the inductive miner with a noise threshold of **0.1-0.2**. The IMf gives us a simple log which has good fitness, is not overfitting, and represents the process the best. Further, we ran the ILP Miner but ended up with a model, having many arcs and not good precision and fitness after analyzing with ProM. Lastly, we tried the eST Miner but it could not finish computing.
 
 ![M1_A](images/task2/a/M1_A.png)
-*Figure 1: Model mined with IMf and a noise threshold of 0.2*
+*Figure 1: $M_{1}^{A}$ mined with IMf and a noise threshold of 0.2*
 
 We go the same way as before and first run the Alpha Miner on the filtered log for branch two. This gives us a workflow net this time, but it is not sound, contains too many implicit places, and is not simple. Speaking of simplicity, we again have that the ILP miner is not simple and therefore not further contemplated. The IMf with frequency thresholds of **0.1-0.2** is precise but too general, which is why we recommend the normal IM (see *Figure 2*). The Heuristic Miner would also be a good choice, because of its statistics. It has a fitness of **0.99** and a precision of one but is not as simple as the Inductive Miner, who has a fitness of **1**, by construction, but a precision of **0.956**. For reasons of simplicity we choose the Inductive Miner in its classical variant. Again, the eST Miner could not finish computing.
 
 ![IM_M2](images/task2/a/IM_m2.png)
-*Figure 2: Model mined with standard IM*
+*Figure 2: $M_{2}^{A}$ mined with IM*
 
 Comparing the two models, we see that they look similar by their structure. The first model starts with creating an application and then choosing between submitting or directly moving towards A_Concept. This is not observed in the second model, which is due to the fact that submission is only possible via an online application. Confusingly, the second branch has also a submitted state, which is why we cannot rely on names when analyzing (see enhancement strategies). Now the "low" precision of $M_{2}^{A}$ comes to shine when we observe that multiple activities can be skipped by tau transitions. This is not highly observed in the first model, where we only have a few decisions, and applications are always first accepted and completed (which can be skipped in the first model). The second model has a pre-accepting state, which cannot be seen in the first model. This might be a result of the difference in the information systems. Towards the end $M_{1}^{A}$ allows for looping between validation and marking incomplete files, which cannot be seen in the second model (according to the model the second branch has to have complete files at some point in time). At the end we can choose between denying and canceling and the state A_Pending in the first model. The difference to the second model is here that branch two allows for a parallel run between A_Approved, A_Activated, and A_Registered.
 
@@ -100,11 +100,11 @@ Comparing the two models, we see that they look similar by their structure. The 
 
 As requested, we do not filter the offer logs. The directly follows graphs (abbrev. DFG) can be looked at below.
 
-![DFG_L1O](images/task2/c/dfg_l1o.png){: width="50%" }
-*Figure 3: DFG for LO1*
+![DFG_L1O](images/task2/c/dfg_l1o.png)
+*Figure 3: DFG $L^O_1$*
 
-![DFG_L2O](images/task2/c/dfg_l2o.png){: width="50%" }
-*Figure 4: DFG for LO2*
+![DFG_L2O](images/task2/c/dfg_l2o.png)
+*Figure 4: DFG $L^O_2$*
 
 The main difference is that the DFG for the first log has an end activity which cannot be seen in the second log. Further, the DFG for the first log has no loops and therefore does not allow for repetitions in an offer process. The other DFG allows for the creation of multiple offers after an offer has been canceled, which could be the result of negotiations, allowed by the second branch. Hence, acceptance and refusing could be considered the two end activities for an offer process on the second branch, but *not quite*. Looking at the colors, we observe that the first branch ends always in end but in the second branch some offer processes end in O_Sent (mail only) and O_Returned, representing incomplete processes. For completeness, we should consider the first DFG, nevertheless, the second DFG represents realistic behavior, with customers simply not responding and rejecting offers. For *analyzing* the process, we choose the second DFG (because we can analyze where the problems exactly lie to enhance the process) but for a desirable behavior and a *discovery* we would like to see the first DFG, since it avoids loops and has individual start and end activities. The reasons for the differences could be that the first branch has better tracking of the process. This is supported by the fact that the first branch offers one additional technology and therefore might also have better technology in general when it comes to control of the workflow.
 
@@ -113,10 +113,10 @@ The main difference is that the DFG for the first log has an end activity which 
 Lastly, we analyze the workflow of the process. To do so, we mine the two models $M_{1}^{W}$ and $M_{2}^{W}$ with the IMflc Miner, using a noise threshold of **0.05** for the first model and a threshold of **0.2** for the second one. We omit the IMlc Miner since it yields too large and not simple models.
 
 ![IMFLc_M1](images/task2/d/imflc_0.05.png)
-*Figure 5: Model mined with IMflc and a noise threshold of 0.05*
+*Figure 5: $M_{1}^{W}$ mined with IMflc and a noise threshold of 0.05*
 
 ![IMFLc_M2](images/task2/d/imflc_m2_2.png)
-*Figure 6: Model mined with IMflc and a noise threshold of 0.2*
+*Figure 6: $M_{2}^{W}$ mined with IMflc and a noise threshold of 0.2*
 
 Comparing the two models we can see that both allow for many choices. Still, the second model required for a complete application whereas this step can be skipped in the first log, but both require a call after offers. A call after offers can be looped in the second model, which is realistic. The end part for both workflows is the same as both models either finish with call after offers or go for validating the application and possibly calling and looping for incomplete files. The first branch has fewer choices than the second one and follows therefore a stricter order, which has been already mentioned throughout the course of this report. The fact that the second model has more loops shows a general trend, as loops were also seen in the DFG for the second log in the offer state.
 
@@ -130,3 +130,41 @@ The Petri net starts by either checking at least once for potential fraud or by 
 
 Compared to the previous model, there are some differences. It is not mandatory anymore to call after an offer. It is not possible to call after an offer without completing the application first. Also, it is not possible to redo the validation but only the call for incomplete files.
 
+
+# Conformance Checking
+
+This section covers findings of behavior that was not expected and should not happen, as it represents a deviation. For this, we use the process explorer in ProM and compute alignments between the models $M_{1}^{A}$ (see *Figure 1*) and $M_{2}^{A}$ (see *Figure 2*). Further, we apply token-based replay to support our findings and also run the inductive visual miner for optimal results.
+
+## Deviations between $L_{1}^{A}$ and $M_{1}^{A}$
+
+In this case, we observe one deviation when looking at alignments.
+
+![Deviations between L1 and M1](images/task3/dev1_l1.png)
+*Figure 1: A_Complete appearing only in the model and not in the log*
+
+This means that an activity, e.g., A_Denied, has been performed in the process without A_Complete being observed in the log. However, *Figure 2* shows that this is the case because A_Complete is *forced* after A_Accepted.
+
+![Reason for deviation](images/task3/dev1_l1_reason.png)
+*Figure 2: Reason for the above deviation*
+
+This can also be observed using the inductive visual miner and choosing the option "paths and deviations." Further, it can be seen by applying token-based replay and examining the missed tokens (and the remaining tokens before A_Complete) before the last three activities.
+
+![Another reason for deviation](images/task3/dev1_l1_reason2.png)
+*Figure 3: Another reason for the above deviation*
+
+## Deviations between $L_{2}^{A}$ and $M_{2}^{A}$
+
+The model has perfect fitness but is not completely precise, as it allows for behavior not observed in the log. This can be seen by applying the Inductive Visual Miner in the figure below.
+
+![Deviations on the preprocessed log and M2A](images/task3/devs_l2_2.png)
+*Figure 4: Deviations on the preprocessed log and $M_{2}^{A}$*
+
+Computing alignments on the preprocessed log gives us zero deviations. However, for completeness, applying the same methods as before (e.g., not filtered log and the same miner on the not filtered log), we do observe the following deviations.
+
+![Deviations observed](images/task3/devs_l2.png)
+*Figure 5: A_Complete and A_Preaccepted appearing only in the model and not in the log*
+
+Further, we see that A_Preaccepted is also a model move and not seen in the log. The same is the case for A_Validating.
+
+![A_Validating only in model](images/task3/dev2_l2.png)
+*Figure 6: A_Validating appearing only in the model and not in the log*
