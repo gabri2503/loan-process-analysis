@@ -92,7 +92,7 @@ We first mine the log of the first branch. Starting with the Alpha Miner we do n
 We go the same way as before and first run the Alpha Miner on the filtered log for branch two. This gives us a workflow net this time, but it is not sound, contains too many implicit places, and is not simple. Speaking of simplicity, we again have that the ILP miner is not simple and therefore not further contemplated. The IMf with frequency thresholds of **0.1-0.2** is precise but too general, which is why we recommend the normal IM (see *Figure 2*). The Heuristic Miner would also be a good choice, because of its statistics. It has a fitness of **0.99** and a precision of one but is not as simple as the Inductive Miner, who has a fitness of **1**, by construction, but a precision of **0.956**. For reasons of simplicity we choose the Inductive Miner in its classical variant. Again, the eST Miner could not finish computing.
 
 ![IM_M2](images/task2/a/IM_m2.png)
-*Figure 2: $M_{2}^{A}$ mined with IM*
+*Figure 2: M_2^A mined with IM*
 
 Comparing the two models, we see that they look similar by their structure. The first model starts with creating an application and then choosing between submitting or directly moving towards A_Concept. This is not observed in the second model, which is due to the fact that submission is only possible via an online application. Confusingly, the second branch has also a submitted state, which is why we cannot rely on names when analyzing (see enhancement strategies). Now the "low" precision of $M_{2}^{A}$ comes to shine when we observe that multiple activities can be skipped by tau transitions. This is not highly observed in the first model, where we only have a few decisions, and applications are always first accepted and completed (which can be skipped in the first model). The second model has a pre-accepting state, which cannot be seen in the first model. This might be a result of the difference in the information systems. Towards the end $M_{1}^{A}$ allows for looping between validation and marking incomplete files, which cannot be seen in the second model (according to the model the second branch has to have complete files at some point in time). At the end we can choose between denying and canceling and the state A_Pending in the first model. The difference to the second model is here that branch two allows for a parallel run between A_Approved, A_Activated, and A_Registered.
 
@@ -100,7 +100,7 @@ Comparing the two models, we see that they look similar by their structure. The 
 
 As requested, we do not filter the offer logs. The directly follows graphs (abbrev. DFG) can be looked at below.
 
-![DFG_L1O](images/task2/c/dfg_l1o.png)
+![DFG_L1O](images/task2/c/dfg_l1o.png){: width="50%" }
 *Figure 3: DFG L<sup>O</sup><sub>1</sub>*
 
 ![DFG_L2O](images/task2/c/dfg_l2o.png)
