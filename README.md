@@ -100,11 +100,11 @@ Comparing the two models, we see that they look similar by their structure. The 
 
 As requested, we do not filter the offer logs. The directly follows graphs (abbrev. DFG) can be looked at below.
 
-![DFG_L1O](images/task2/c/dfg_l1o.jpg)
-*Figure 3: DFG $L^O_1$*
+![DFG_L1O](images/task2/c/dfg_l1o.png)
+*Figure 3: DFG L<sup>O</sup><sub>1</sub>*
 
-![DFG_L2O](images/task2/c/dfg_l2o.jpg)
-*Figure 4: DFG $L^O_2$*
+![DFG_L2O](images/task2/c/dfg_l2o.png)
+*Figure 4: DFG L<sup>O</sup><sub>2</sub>*
 
 The main difference is that the DFG for the first log has an end activity which cannot be seen in the second log. Further, the DFG for the first log has no loops and therefore does not allow for repetitions in an offer process. The other DFG allows for the creation of multiple offers after an offer has been canceled, which could be the result of negotiations, allowed by the second branch. Hence, acceptance and refusing could be considered the two end activities for an offer process on the second branch, but *not quite*. Looking at the colors, we observe that the first branch ends always in end but in the second branch some offer processes end in O_Sent (mail only) and O_Returned, representing incomplete processes. For completeness, we should consider the first DFG, nevertheless, the second DFG represents realistic behavior, with customers simply not responding and rejecting offers. For *analyzing* the process, we choose the second DFG (because we can analyze where the problems exactly lie to enhance the process) but for a desirable behavior and a *discovery* we would like to see the first DFG, since it avoids loops and has individual start and end activities. The reasons for the differences could be that the first branch has better tracking of the process. This is supported by the fact that the first branch offers one additional technology and therefore might also have better technology in general when it comes to control of the workflow.
 
