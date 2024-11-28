@@ -21,7 +21,7 @@ Both branches seem to have similar amounts of applications, which can be seen as
 ## Dotted Charts for Logs L1 and L2
 
 In the following figure, we can see the four dotted charts.
-
+{#loan-process-chart}
 | ![Log 1 - Cases Over Time](images/task1/dotted_chart_a_log1.png) | ![Log 2 - Cases Over Time](images/task1/dotted_chart_a_log2.png) |
 |-------------------------------------------------------------|-------------------------------------------------------------|
 | Cases over event timestamp in L1                           | Cases over event timestamp in L2                           |
@@ -76,5 +76,5 @@ Examining the workflow DFG (after filtering out some noise), we see that *W_Comp
 
 # Preprocessing
 
-Before discovering the process one might filter the event data and filter out everything that does not appear too often, since this would be regarded noise and might defer the impression of the actual process. One example for this might be the short traces on the second branch (see [here](##Dotted Charts for Logs L1 and L2) ). In addition, we could shorten processes that need much longer to complete than the average, since they could be considered outliers. In this log in particular three types of events exist (W, O, A). Therefore we split the log into three parts as well. We apply these preprocessing strategies.
+Before discovering the process one might filter the event data and filter out everything that does not appear too often, since this would be regarded noise and might defer the impression of the actual process. One example for this might be the short traces on the second branch (see [here]((#loan-process-chart))). In addition, we could shorten processes that need much longer to complete than the average, since they could be considered outliers. In this log in particular three types of events exist (W, O, A). Therefore we split the log into three parts as well. We apply these preprocessing strategies.
 
