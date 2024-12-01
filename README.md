@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository contains a detailed analysis of the loan application processes from two branches of a financial institution. The goal of the analysis is to compare the processes, identify key differences, and suggest potential improvements based on the data from two event logs. The analysis was almost completely done with ProM and only the preliminary analysis was done with Python using the PM4Py library. 
+This repository contains a detailed analysis of the loan application processes from two branches of a financial institution. The goal of the analysis is to compare the processes, identify key differences, and suggest potential improvements based on the data from two event logs. The analysis was almost completely done with **ProM** and only the preliminary analysis was done with **Python** using the **PM4Py** library. 
 
 ## Project Description
 
